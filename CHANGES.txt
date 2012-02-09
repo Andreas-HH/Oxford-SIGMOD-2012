@@ -1,0 +1,12 @@
+Version 1.02 (December 18, 2011)
+  * Updated the contest interface documentation to clarify handling of duplicates
+    (see include/contest_interface.h for details)
+
+Version 1.01 (December 17, 2011)
+  * Updated the contest interface (see include/contest_interface.h for details)
+  * Updated the unit tests to match the changes made to the contest interface
+    and fix the errors while record creation
+  * As from now you have to submit a shared 64-bit linux compatible library (*.so) instead of a static one
+
+Version 1.0 (December 14, 2011)
+  * Initial release
