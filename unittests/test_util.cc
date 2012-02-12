@@ -25,7 +25,58 @@ Implements classes to build and run a set of unit tests.
 #include <iostream>
 #include <sstream>
 
+#include <contest_interface.h>
 #include "test_util.h"
+
+
+
+void CopyKeyX(Key &a, const Key &b){
+  a.value = new Attribute*[b.attribute_count];
+  a.attribute_count = b.attribute_count;
+  for(int i = 0; i < a.attribute_count; i++){
+    if(b.value[i] != NULL){
+      a.value[i] = new Attribute();
+      memcpy(a.value[i],b.value[i],sizeof(Attribute));
+    } else {
+      a.value[i] = NULL;
+    }
+  }
+}
+
+void CopyRecordX(Record *dst, Record *src)
+{
+	dst->payload.size = src->payload.size;
+	dst->payload.data = malloc(src->payload.size);
+	memcpy(dst->payload.data, src->payload.data, src->payload.size);
+	CopyKeyX(dst->key, src->key);
+}
+
+// Deletes a key
+void DeleteKeyX(Key* key){
+	//if (key.value == 0)
+		//return;
+  for (int i = 0; i < key->attribute_count; i++){
+    if(key->value[i] != NULL){
+		  delete key->value[i];
+    }
+	}
+
+	delete[] key->value;
+};
+
+// Deletes a record
+void DeleteRecordX(Record **record){
+  if(*record == NULL)
+    return;
+
+  DeleteKeyX(&((*record)->key));
+
+  free((*record)->payload.data);
+  delete (*record);
+
+  (*record) = NULL;
+}
+
 
 /**
 Constructor for Tester.

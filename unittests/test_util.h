@@ -28,6 +28,9 @@ Provides all necessary classes to build and run a set of unit tests.
 #ifndef _UNITTESTS_TEST_UTIL_H_
 #define _UNITTESTS_TEST_UTIL_H_
 
+void CopyRecordX(Record *dst, Record *src);
+void DeleteRecordX(Record **record);
+
 // Defines a simple Tester class.
 //
 // Tester implements the Singleton Pattern.

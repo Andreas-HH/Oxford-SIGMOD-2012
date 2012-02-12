@@ -17,59 +17,55 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-# Author: Lukas M. Maas <Lukas_Michael.Maas@mailbox.tu-dresden.de>
-# 
+# Author: Lukas M. Maas <Lukas_Michael.Maas@mailbox.tu-dresden.de>, T. Kissinger <thomas.kissinger@tu-dresden.de>
+#.
 # Current version: 1.0 (released December 14, 2011)
-# 
+#.
 # Version history:
-#   - 1.0 Initial release (December 14, 2011) 
+#   - 1.0 Initial release (December 14, 2011).
 
-COMPILER = g++
-CFLAGS = -Wall
-LDFLAGS = 
+#CC=gcc
+#CXX=g++
 
-BINDIR = ./bin
-INCDIR = ./include
-LIBDIR = ./lib
+CFLAGS=-O0 -Wall -g -I. -I./include -I./common
+CXXFLAGS=$(CFLAGS)
+LDFLAGS=-lpthread -ldb_cxx -lrt
 
-# The name of the library implementing the contest interface
-LIBRARY = contest
+REFIMPLO=example/BDBImpl.o example/ConnectionManager.o example/Index.o example/Iterator.o example/Util.o
+IMPL=$(REFIMPLO)
+PROGRAMS=unittest basedriver
+COMMON=common/argument_parser.o
 
-# Directory related rules
-$(BINDIR):
-	mkdir -p $(BINDIR)
+all: $(PROGRAMS)
 
-$(LIBDIR):
-	mkdir -p $(LIBDIR)
+UNITTESTO=unittests/main.o unittests/test_runner.o unittests/test_util.o unittests/tests.o
+BASEDRIVERO=benchmark/basedriver.o
 
-# Unit tests
-unittests: $(BINDIR)
-	$(COMPILER) -I. -I$(INCDIR) $(CFLAGS) unittests/main.cc unittests/tests.cc unittests/test_runner.cc unittests/test_util.cc common/argument_parser.cc -L$(LIBDIR) -lpthread $(LDFLAGS) -o $(BINDIR)/unittests -l$(LIBRARY)
+unittest: $(IMPL) $(COMMON) $(UNITTESTO)
+	$(CXX) $(CXXFLAGS) -o unittest $(IMPL) $(COMMON) $(UNITTESTO) $(LDFLAGS)
 
-# The following targets may be used to run the created executables
-run-unittests: unittests
-	$(BINDIR)/unittests
+basedriver: $(IMPL) $(COMMON) $(BASEDRIVERO)
+	$(CXX) $(CXXFLAGS) -o basedriver $(IMPL) $(COMMON) $(BASEDRIVERO) $(LDFLAGS)
 
-run: run-unittests
 
-# Cleanup all files created during the build process
 clean:
-	rm -rf $(BINDIR) $(LIBDIR)
+	$(RM) -R $(PROGRAMS)
+	find . -name '*.o' -print | xargs rm -f 
 
-# Default target
-all: unittests
 
-# Display a help page
-help:
-	@echo
-	@echo "Build SIGMOD 2012 Programming Contest"
-	@echo "============================================"
-	@echo "build targets:"
-	@echo "  cleanup           Delete all files created during the build process"
-	@echo "  help              Display this help"
-	@echo "  run-unittests     Build and execute the unit tests"
-	@echo "  unittests         Build the unit tests"
-	@echo
-	@echo "binary output directory: $(BINDIR)"
-	@echo "library directory: $(LIBDIR)"
-	@echo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
